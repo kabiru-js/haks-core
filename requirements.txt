@@ -1,0 +1,23 @@
+# requirements.txt
+
+# Core
+fastapi
+uvicorn[standard]
+
+# API & Data
+openai
+httpx
+pydantic
+pydantic-settings
+python-dotenv
+
+# File Handling & OCR
+python-multipart
+pytesseract
+pillow
+python-docx
+PyMuPDF  # For reading text from PDFs
+pdf2image # Fallback for image-based PDFs
+
+# PDF Generation
+fpdf2
