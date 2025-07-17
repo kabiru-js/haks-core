@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Assignment Solver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- High-Fidelity Styling to match https://v0-vercel-landing-page-fawn.vercel.app/ --- */
+        :root {
+            --background-color: #000000;
+            --container-bg: #0a0a0a;
+            --border-color: #262626;
+            --text-primary: #ffffff;
+            --text-secondary: #a3a3a3;
+            --accent-gradient: linear-gradient(to right, #6366f1, #8b5cf6, #ec4899);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* --- Faithful Aurora Background Effect --- */
+        .aurora-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+        }
+        .aurora-background::before,
+        .aurora-background::after {
+            content: "";
+            position: absolute;
+            width: 800px;
+            height: 800px;
+            background-repeat: no-repeat;
+            filter: blur(120px);
+            opacity: 0.4;
+        }
+        .aurora-background::before {
+            top: -250px;
+            left: -200px;
+            background-image: radial-gradient(circle, #6366f1, transparent 60%);
+        }
+        .aurora-background::after {
+            bottom: -250px;
+            right: -200px;
+            background-image: radial-gradient(circle, #ec4899, transparent 60%);
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            position: relative; /* Sits on top of the aurora background */
+            z-index: 1;
+        }
+
+        h1, h2 {
+            color: var(--text-primary);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2.25rem; /* 36px */
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 1.5rem; /* 24px */
+            margin-bottom: 1.5rem;
+        }
+
+        .description {
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 3rem auto;
+            font-size: 1.125rem; /* 18px */
+            line-height: 1.6;
+        }
+        
+        .form-container {
+            background-color: var(--container-bg);
+            padding: 2rem; /* 32px */
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem; /* 8px */
+            margin-bottom: 2.5rem; /* 40px */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 0.875rem; /* 14px */
+        }
+
+        textarea, input[type="file"] {
+            width: 100%;
+            padding: 0.75rem; /* 12px */
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            background-color: var(--container-bg);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+        }
+        
+        input[type="file"]::file-selector-button {
+            background-color: #1f2937;
+            color: var(--text-primary);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            margin-right: 1rem;
+        }
+
+        button {
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.875rem 1rem; /* 14px 16px */
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            width: 100%;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        #results-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem; /* 20px */
+            margin-top: 1.25rem;
+        }
+        
+        .result-box {
+            background-color: var(--container-bg);
+            padding: 1.5rem; /* 24px */
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+        }
+        
+        .result-box h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 1.125rem; /* 18px */
+            font-weight: 500;
+        }
+        
+        .result-box pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: inherit;
+            font-size: 0.9375rem; /* 15px */
+            line-height: 1.7;
+            color: var(--text-secondary);
+        }
+        
+        #loading, #error {
+            text-align: center;
+            padding: 1rem;
+            margin-top: 1.25rem;
+            border-radius: 0.5rem;
+            display: none; /* Hidden by default */
+        }
+        
+        #loading {
+            color: #d1d5db;
+            background-color: #171717;
+        }
+        
+        #error {
+            color: #fca5a5;
+            background-color: #450a0a;
+            border: 1px solid #991b1b;
+        }
+        
+        @media (max-width: 768px) {
+            #results-container {
+                grid-template-columns: 1fr;
+            }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="aurora-background"></div>
+
+    <div class="container">
+        <h1>Assignment Solver</h1>
+        <p class="description">
+            Leverage AI to get accurate solutions for your assignments, then paraphrase them into a natural, student-like voice.
+        </p>
+
+        <div class="form-container">
+            <form id="solver-form">
+                <h2>1. Get Your Solution</h2>
+                <label for="assignment-text">Paste assignment text:</label>
+                <textarea id="assignment-text" placeholder="e.g., Explain the theory of relativity in simple terms."></textarea>
+                
+                <label for="assignment-file">Or upload a file (PDF, DOCX, PNG, JPG):</label>
+                <input type="file" id="assignment-file" accept=".pdf,.docx,.png,.jpg,.jpeg">
+                
+                <button type="submit" id="solve-button">✨ Solve Assignment</button>
+            </form>
+        </div>
+        
+        <div id="loading">Working on it... The AI is thinking 🤔</div>
+        <div id="error"></div>
+
+        <div id="results-container">
+            <div class="result-box" id="original-answer-box" style="display: none;">
+                <h3>Original AI Answer</h3>
+                <pre id="original-answer"></pre>
+            </div>
+            <div class="result-box" id="paraphrased-answer-box" style="display: none;">
+                <h3>Paraphrased Student Answer</h3>
+                <pre id="paraphrased-answer"></pre>
+            </div>
+        </div>
+
+        <div class="form-container" style="margin-top: 2.5rem;">
+            <form id="pdf-form">
+                <h2>2. Generate Handwritten PDF</h2>
+                <label for="pdf-text">Paste text to convert:</label>
+                <textarea id="pdf-text" placeholder="Paste your paraphrased answer here to make it look handwritten..."></textarea>
+                <button type="submit" id="pdf-button">📄 Generate & Download PDF</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // --- THIS JAVASCRIPT IS UNCHANGED ---
+        // (The same functional JS code from the previous versions goes here)
+        const API_BASE_URL = 'http://127.0.0.1:8000';
+        const solverForm = document.getElementById('solver-form');
+        const assignmentText = document.getElementById('assignment-text');
+        const assignmentFile = document.getElementById('assignment-file');
+        const solveButton = document.getElementById('solve-button');
+        const pdfForm = document.getElementById('pdf-form');
+        const pdfText = document.getElementById('pdf-text');
+        const pdfButton = document.getElementById('pdf-button');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const resultsContainer = document.getElementById('results-container');
+        const originalAnswerBox = document.getElementById('original-answer-box');
+        const paraphrasedAnswerBox = document.getElementById('paraphrased-answer-box');
+        const originalAnswerPre = document.getElementById('original-answer');
+        const paraphrasedAnswerPre = document.getElementById('paraphrased-answer');
+        solverForm.addEventListener('submit', async (event) => {
+            event.preventDefault(); 
+            loadingDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            originalAnswerBox.style.display = 'none';
+            paraphrasedAnswerBox.style.display = 'none';
+            solveButton.disabled = true;
+            solveButton.textContent = "Solving...";
+            const formData = new FormData();
+            const textValue = assignmentText.value;
+            const fileValue = assignmentFile.files[0];
+            if (textValue && fileValue) {
+                showError("Please provide either text or a file, not both.");
+                solveButton.disabled = false;
+                solveButton.textContent = "✨ Solve Assignment";
+                loadingDiv.style.display = 'none';
+                return;
+            }
+            if (textValue) {
+                formData.append('text', textValue);
+            } else if (fileValue) {
+                formData.append('file', fileValue);
+            } else {
+                showError("Please enter text or upload a file.");
+                solveButton.disabled = false;
+                solveButton.textContent = "✨ Solve Assignment";
+                loadingDiv.style.display = 'none';
+                return;
+            }
+            try {
+                const response = await fetch(`${API_BASE_URL}/solve-assignment`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                originalAnswerPre.textContent = data.original_answer;
+                paraphrasedAnswerPre.textContent = data.paraphrased_answer;
+                originalAnswerBox.style.display = 'block';
+                paraphrasedAnswerBox.style.display = 'block';
+            } catch (err) {
+                showError(`An error occurred: ${err.message}`);
+            } finally {
+                loadingDiv.style.display = 'none';
+                solveButton.disabled = false;
+                solveButton.textContent = "✨ Solve Assignment";
+            }
+        });
+        pdfForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const textToConvert = pdfText.value;
+            if (!textToConvert.trim()) {
+                showError("Please enter text to generate a PDF.");
+                return;
+            }
+            pdfButton.disabled = true;
+            pdfButton.textContent = "Generating...";
+            errorDiv.style.display = 'none';
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate-handwritten-pdf`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: textToConvert }),
+                });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+                }
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'handwritten_solution.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+            } catch(err) {
+                showError(`PDF Generation Failed: ${err.message}`);
+            } finally {
+                pdfButton.disabled = false;
+                pdfButton.textContent = "📄 Generate & Download PDF";
+            }
+        });
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

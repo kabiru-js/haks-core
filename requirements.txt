@@ -10,14 +10,15 @@ httpx
 pydantic
 pydantic-settings
 python-dotenv
+groq  # <-- ADD THIS LINE
 
 # File Handling & OCR
 python-multipart
 pytesseract
 pillow
 python-docx
-PyMuPDF  # For reading text from PDFs
-pdf2image # Fallback for image-based PDFs
+PyMuPDF
+pdf2image
 
 # PDF Generation
 fpdf2

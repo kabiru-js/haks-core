@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAKS - AI Assignment Solver</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* HAKS Design System */
+        :root {
+            /* HAKS Color Palette */
+            --primary-coral: #ff6b6b;
+            --primary-navy: #2c3e50;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --background-cream: #faf8f5;
+            --surface-white: #ffffff;
+            --surface-elevated: #ffffff;
+            --text-dark: #2c3e50;
+            --text-medium: #64748b;
+            --text-light: #94a3b8;
+            --border-light: #e2e8f0;
+            --border-medium: #cbd5e1;
+            --shadow-color: rgba(44, 62, 80, 0.1);
+            --success-green: #10b981;
+            --error-red: #ef4444;
+            --warning-orange: #f59e0b;
+
+            /* Typography */
+            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+            /* Spacing Scale */
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --space-2xl: 4rem;
+            --space-3xl: 6rem;
+
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 var(--shadow-color);
+            --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+            --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+            --shadow-xl: 0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
+
+            /* Border Radius */
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--background-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Background Decoration - Flowing Lines like HAKS */
+        .background-decoration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .flowing-lines {
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+        }
+
+        /* Navigation Header */
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-navy);
+            letter-spacing: -0.025em;
+        }
+
+        .nav-back {
+            color: var(--text-medium);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .nav-back:hover {
+            color: var(--primary-coral);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: calc(70px + var(--space-xl)) var(--space-md) var(--space-xl);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Page Header */
+        .page-header {
+            text-align: center;
+            margin-bottom: var(--space-3xl);
+        }
+
+        .page-title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: var(--primary-navy);
+            margin-bottom: var(--space-md);
+            letter-spacing: -0.025em;
+        }
+
+        .page-title .accent {
+            color: var(--primary-coral);
+            background: linear-gradient(135deg, var(--primary-coral) 0%, #ffa726 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-description {
+            font-size: 1.25rem;
+            color: var(--text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Form Containers */
+        .form-section {
+            background: var(--surface-white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-2xl);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            box-shadow: var(--shadow-xl);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .section-number {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--primary-coral), #ffa726);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: var(--space-xs);
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.025em;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: var(--space-md);
+            border: 2px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            background-color: var(--surface-white);
+            color: var(--text-dark);
+            font-family: inherit;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: vertical;
+            transition: all 0.2s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-coral);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .form-textarea::placeholder {
+            color: var(--text-light);
+        }
+
+        .form-file {
+            width: 100%;
+            padding: var(--space-md);
+            border: 2px dashed var(--border-medium);
+            border-radius: var(--radius-lg);
+            background-color: var(--background-cream);
+            color: var(--text-dark);
+            font-family: inherit;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .form-file:hover {
+            border-color: var(--primary-coral);
+            background-color: rgba(255, 107, 107, 0.05);
+        }
+
+        .form-file:focus {
+            outline: none;
+            border-color: var(--primary-coral);
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .form-file::file-selector-button {
+            background: var(--primary-coral);
+            color: white;
+            border: none;
+            padding: var(--space-xs) var(--space-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            margin-right: var(--space-md);
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .form-file::file-selector-button:hover {
+            background: #ff5252;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--primary-coral);
+            color: white;
+            border: none;
+            padding: var(--space-md) var(--space-xl);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-md);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        /* Results Container */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        .result-card {
+            background: var(--surface-white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-xl);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .result-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .result-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--primary-navy);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-xs);
+        }
+
+        .result-content {
+            color: var(--text-medium);
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9375rem;
+        }
+
+        /* Status Messages */
+        .status-message {
+            text-align: center;
+            padding: var(--space-lg);
+            margin: var(--space-lg) 0;
+            border-radius: var(--radius-lg);
+            display: none;
+            font-weight: 500;
+        }
+
+        .status-loading {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-red);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-green);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide-in {
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: calc(70px + var(--space-lg)) var(--space-sm) var(--space-lg);
+            }
+
+            .form-section {
+                padding: var(--space-lg);
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+
+            .nav-container {
+                padding: 0 var(--space-sm);
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-description {
+                font-size: 1.125rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-section {
+                padding: var(--space-md);
+            }
+
+            .section-title {
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Button Ripple Effect */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Decoration -->
+    <div class="background-decoration">
+        <svg class="flowing-lines" viewBox="0 0 1200 800" fill="none">
+            <path d="M0 400C300 200 600 600 1200 400" stroke="url(#gradient1)" stroke-width="2" opacity="0.6"/>
+            <path d="M0 300C400 100 800 500 1200 300" stroke="url(#gradient2)" stroke-width="2" opacity="0.4"/>
+            <path d="M0 500C350 300 650 700 1200 500" stroke="url(#gradient3)" stroke-width="2" opacity="0.3"/>
+            <defs>
+                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#3b82f6"/>
+                    <stop offset="100%" style="stop-color:#06b6d4"/>
+                </linearGradient>
+                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#ff6b6b"/>
+                    <stop offset="100%" style="stop-color:#ffa726"/>
+                </linearGradient>
+                <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#8b5cf6"/>
+                    <stop offset="100%" style="stop-color:#ec4899"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <div class="logo-icon">🧠</div>
+                <span class="logo-text">Haks</span>
+            </div>
+            <a href="#" class="nav-back">
+                <span>←</span>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">
+                Assignment <span class="accent">Solver</span>
+            </h1>
+            <p class="page-description">
+                Leverage AI to get accurate solutions for your assignments, then paraphrase them into a natural, student-like voice.
+            </p>
+        </div>
+
+        <!-- Step 1: Get Solution -->
+        <div class="form-section">
+            <form id="solver-form">
+                <h2 class="section-title">
+                    <span class="section-number">1</span>
+                    Get Your Solution
+                </h2>
+                
+                <div class="form-group">
+                    <label for="assignment-text" class="form-label">Paste assignment text:</label>
+                    <textarea 
+                        id="assignment-text" 
+                        class="form-textarea"
+                        placeholder="e.g., Explain the theory of relativity in simple terms."
+                    ></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="assignment-file" class="form-label">Or upload a file (PDF, DOCX, PNG, JPG):</label>
+                    <input 
+                        type="file" 
+                        id="assignment-file" 
+                        class="form-file"
+                        accept=".pdf,.docx,.png,.jpg,.jpeg"
+                    >
+                </div>
+                
+                <button type="submit" id="solve-button" class="btn-primary">
+                    <span>✨</span>
+                    <span>Solve Assignment</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Status Messages -->
+        <div id="loading" class="status-message status-loading">
+            <div>🤔 Working on it... The AI is thinking</div>
+        </div>
+        <div id="error" class="status-message status-error"></div>
+        <div id="success" class="status-message status-success"></div>
+
+        <!-- Results -->
+        <div id="results-container" class="results-grid">
+            <div class="result-card" id="original-answer-box">
+                <h3 class="result-title">
+                    <span>🤖</span>
+                    Original AI Answer
+                </h3>
+                <div class="result-content" id="original-answer"></div>
+            </div>
+            <div class="result-card" id="paraphrased-answer-box">
+                <h3 class="result-title">
+                    <span>✍️</span>
+                    Paraphrased Student Answer
+                </h3>
+                <div class="result-content" id="paraphrased-answer"></div>
+            </div>
+        </div>
+
+        <!-- Step 2: Generate PDF -->
+        <div class="form-section" style="margin-top: 2.5rem;">
+            <form id="pdf-form">
+                <h2 class="section-title">
+                    <span class="section-number">2</span>
+                    Generate Handwritten PDF
+                </h2>
+                
+                <div class="form-group">
+                    <label for="pdf-text" class="form-label">Paste text to convert:</label>
+                    <textarea 
+                        id="pdf-text" 
+                        class="form-textarea"
+                        placeholder="Paste your paraphrased answer here to make it look handwritten..."
+                    ></textarea>
+                </div>
+                
+                <button type="submit" id="pdf-button" class="btn-primary">
+                    <span>📄</span>
+                    <span>Generate & Download PDF</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // API Configuration
+        const API_BASE_URL = 'http://127.0.0.1:8000/api';
+        
+        // DOM Elements
+        const solverForm = document.getElementById('solver-form');
+        const assignmentText = document.getElementById('assignment-text');
+        const assignmentFile = document.getElementById('assignment-file');
+        const solveButton = document.getElementById('solve-button');
+        const pdfForm = document.getElementById('pdf-form');
+        const pdfText = document.getElementById('pdf-text');
+        const pdfButton = document.getElementById('pdf-button');
+        const loadingDiv = document.getElementById('loading');
+        const errorDiv = document.getElementById('error');
+        const successDiv = document.getElementById('success');
+        const resultsContainer = document.getElementById('results-container');
+        const originalAnswerBox = document.getElementById('original-answer-box');
+        const paraphrasedAnswerBox = document.getElementById('paraphrased-answer-box');
+        const originalAnswerDiv = document.getElementById('original-answer');
+        const paraphrasedAnswerDiv = document.getElementById('paraphrased-answer');
+
+        // Button Ripple Effect
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = event.clientX - rect.left - size / 2;
+            const y = event.clientY - rect.top - size / 2;
+
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple');
+
+            button.appendChild(ripple);
+
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        }
+
+        // Add ripple effect to all buttons
+        document.querySelectorAll('.btn-primary').forEach(button => {
+            button.addEventListener('click', createRipple);
+        });
+
+        // Navigation scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav-header');
+            if (window.scrollY > 50) {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+                nav.style.boxShadow = '0 4px 6px -1px rgba(44, 62, 80, 0.1)';
+            } else {
+                nav.style.background = 'rgba(255, 255, 255, 0.9)';
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Utility Functions
+        function showStatus(type, message) {
+            hideAllStatus();
+            const statusDiv = document.getElementById(type);
+            statusDiv.textContent = message;
+            statusDiv.style.display = 'block';
+            statusDiv.classList.add('slide-in');
+        }
+
+        function hideAllStatus() {
+            loadingDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            successDiv.style.display = 'none';
+        }
+
+        function showResults(originalAnswer, paraphrasedAnswer) {
+            originalAnswerDiv.textContent = originalAnswer;
+            paraphrasedAnswerDiv.textContent = paraphrasedAnswer;
+            
+            // Show results with animation
+            setTimeout(() => {
+                originalAnswerBox.classList.add('visible');
+            }, 100);
+            
+            setTimeout(() => {
+                paraphrasedAnswerBox.classList.add('visible');
+            }, 200);
+
+            // Auto-fill PDF textarea
+            pdfText.value = paraphrasedAnswer;
+        }
+
+        function hideResults() {
+            originalAnswerBox.classList.remove('visible');
+            paraphrasedAnswerBox.classList.remove('visible');
+        }
+
+        // Form Handlers
+        solverForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            showStatus('loading', '🤔 Working on it... The AI is thinking');
+            hideResults();
+            solveButton.disabled = true;
+            solveButton.innerHTML = '<span>⏳</span><span>Solving...</span>';
+
+            const formData = new FormData();
+            const textValue = assignmentText.value.trim();
+            const fileValue = assignmentFile.files[0];
+
+            // Validation
+            if (textValue && fileValue) {
+                showStatus('error', 'Please provide either text or a file, not both.');
+                resetSolveButton();
+                return;
+            }
+
+            if (!textValue && !fileValue) {
+                showStatus('error', 'Please enter text or upload a file.');
+                resetSolveButton();
+                return;
+            }
+
+            // Prepare form data
+            if (textValue) {
+                formData.append('text', textValue);
+            } else if (fileValue) {
+                formData.append('file', fileValue);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/solve-assignment`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                hideAllStatus();
+                showResults(data.original_answer, data.paraphrased_answer);
+                showStatus('success', '✅ Assignment solved successfully!');
+                
+            } catch (err) {
+                showStatus('error', `❌ An error occurred: ${err.message}`);
+            } finally {
+                resetSolveButton();
+            }
+        });
+
+        pdfForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const textToConvert = pdfText.value.trim();
+            if (!textToConvert) {
+                showStatus('error', 'Please enter text to generate a PDF.');
+                return;
+            }
+
+            pdfButton.disabled = true;
+            pdfButton.innerHTML = '<span>⏳</span><span>Generating...</span>';
+            hideAllStatus();
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate-handwritten-pdf`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: textToConvert }),
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
+                }
+
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = 'handwritten_solution.pdf';
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                a.remove();
+
+                showStatus('success', '📄 PDF generated and downloaded successfully!');
+                
+            } catch (err) {
+                showStatus('error', `❌ PDF Generation Failed: ${err.message}`);
+            } finally {
+                resetPdfButton();
+            }
+        });
+
+        function resetSolveButton() {
+            solveButton.disabled = false;
+            solveButton.innerHTML = '<span>✨</span><span>Solve Assignment</span>';
+        }
+
+        function resetPdfButton() {
+            pdfButton.disabled = false;
+            pdfButton.innerHTML = '<span>📄</span><span>Generate & Download PDF</span>';
+        }
+
+        // Auto-hide success messages after 5 seconds
+        function autoHideSuccess() {
+            setTimeout(() => {
+                if (successDiv.style.display === 'block') {
+                    successDiv.style.display = 'none';
+                }
+            }, 5000);
+        }
+
+        // Add auto-hide to success messages
+        const originalShowStatus = showStatus;
+        showStatus = function(type, message) {
+            originalShowStatus(type, message);
+            if (type === 'success') {
+                autoHideSuccess();
+            }
+        };
+
+        // Smooth scroll for navigation
+        document.querySelector('.nav-back').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Add entrance animations on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'all 0.6s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
