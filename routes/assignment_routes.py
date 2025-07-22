@@ -1,7 +1,8 @@
 # routes/assignment_routes.py
 
 import io
-from fastapi import APIRouter, Depends, UploadFile, File, Form, HTTPException, status
+# The FIX is on the next line: adding UploadFile back
+from fastapi import APIRouter, File, Form, HTTPException, status, Depends, UploadFile
 from fastapi.responses import StreamingResponse
 
 from models.assignment import AssignmentResponse
@@ -13,13 +14,10 @@ router = APIRouter()
 @router.post("/solve-assignment", response_model=AssignmentResponse)
 async def solve_assignment(
     text: str = Form(None), 
-    file: UploadFile = File(None)
+    file: UploadFile = File(None),
 ):
     """
-    Accepts assignment questions via JSON text or file upload (PDF, DOCX, image),
-    solves it with AI, paraphrases the result, and returns both versions.
-    
-    NOW POWERED BY A LOCAL OLLAMA MODEL.
+    Accepts assignment questions and solves them using the Gemini API aggregator.
     """
     if not text and not file:
         raise HTTPException(
@@ -39,10 +37,9 @@ async def solve_assignment(
         elif text:
             assignment_content = text
         
-        # --- SWITCH TO OLLAMA FUNCTIONS ---
-        # Call the new functions that end with '_ollama'
-        original_answer = await ai_service.get_solution_ollama(assignment_content)
-        paraphrased_answer = await ai_service.paraphrase_solution_ollama(original_answer)
+        # --- SWITCH TO GEMINI FUNCTIONS ---
+        original_answer = await ai_service.get_solution_gemini(assignment_content)
+        paraphrased_answer = await ai_service.paraphrase_solution_gemini(original_answer)
 
         return AssignmentResponse(
             original_answer=original_answer,
@@ -60,12 +57,9 @@ async def solve_assignment(
 
 @router.post("/generate-handwritten-pdf")
 async def generate_handwritten_pdf(request: HandwritingRequest):
-    """
-    Accepts text and returns a downloadable PDF styled like handwriting.
-    """
+    # This endpoint remains unchanged
     try:
         pdf_bytes = pdf_service.create_handwritten_pdf(request.text)
-        
         return StreamingResponse(
             io.BytesIO(pdf_bytes),
             media_type="application/pdf",

@@ -5,12 +5,15 @@ fastapi
 uvicorn[standard]
 
 # API & Data
-openai
 httpx
 pydantic
 pydantic-settings
-python-dotenv
-groq  # <-- ADD THIS LINE
+google-generativeai  # <-- NEW: For Gemini
+
+# --- NEW: Authentication & Database (for later tasks) ---
+sqlalchemy
+passlib[bcrypt]
+python-jose[cryptography]
 
 # File Handling & OCR
 python-multipart
