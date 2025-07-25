@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse  # Import FileResponse
+from fastapi.responses import FileResponse
+from pathlib import Path  # 1. Import the Path library
 
 # Import your route handlers
 from routes import assignment_routes, health_routes
+
+# 2. Define the project's base directory
+BASE_DIR = Path(__file__).resolve().parent
 
 # Initialize the FastAPI application
 app = FastAPI(
@@ -29,14 +33,18 @@ app.add_middleware(
 app.include_router(health_routes.router, prefix="/api", tags=["Health"])
 app.include_router(assignment_routes.router, prefix="/api", tags=["Assignments"])
 
-# --- Frontend Serving (The Fix) ---
+# --- Frontend Serving ---
 
-# This MUST be the last part of your app's setup.
-# It mounts the 'public' directory. Any request that doesn't match an API route
-# will be looked for here. This will serve /app.html, /script.js, /style.css etc.
-app.mount("/static", StaticFiles(directory="public"), name="public_assets")
+# 3. Mount the 'public' directory using an absolute path
+# This ensures FastAPI can find it regardless of the server's working directory.
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR / "public"),
+    name="public_assets"
+)
 
 # This special route handles the root path "/" to serve your landing page.
 @app.get("/", response_class=FileResponse, include_in_schema=False)
 async def read_landing_page():
-    return FileResponse('public/index.html')
+    # 4. Use an absolute path here as well for consistency
+    return FileResponse(BASE_DIR / 'public' / 'index.html')
