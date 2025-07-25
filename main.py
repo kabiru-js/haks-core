@@ -1,15 +1,17 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from pathlib import Path  # <-- 1. Import Path
+from fastapi.responses import FileResponse
+from pathlib import Path
 
 # Import your route handlers
 from routes import assignment_routes, health_routes
 
-# 2. Define the absolute path to the project's root directory
+# --- Setup: Define Base Directory ---
+# This creates an absolute path to ensure your files are found on Render's server
 BASE_DIR = Path(__file__).resolve().parent
 
-# Initialize the FastAPI application
+# --- Initialize FastAPI App ---
 app = FastAPI(
     title="AI Assignment Solver API",
     description="An API to solve assignments, paraphrase answers, and generate handwritten PDFs.",
@@ -28,17 +30,34 @@ app.add_middleware(
 )
 
 # --- API Routers ---
-# All backend logic is prefixed with /api to avoid conflicts with frontend files.
+# These are matched first. All your backend logic lives here.
 app.include_router(health_routes.router, prefix="/api", tags=["Health"])
 app.include_router(assignment_routes.router, prefix="/api", tags=["Assignments"])
 
 
-# --- Frontend Serving (The Fix) ---
+# --- Frontend Serving ---
+# This section handles serving your HTML pages and static assets.
 
-# 3. Mount the static files directory to the root.
-# This MUST be placed after all your API routes.
-# `html=True` tells FastAPI to automatically serve `index.html` for "/"
-app.mount("/", StaticFiles(directory=BASE_DIR / "public", html=True), name="public")
+# 1. Mount the 'public' directory to serve static files (CSS, JS, images)
+#    Any request starting with /static will be looked for in the 'public' folder.
+app.mount(
+    "/static",
+    StaticFiles(directory=BASE_DIR / "public"),
+    name="public"
+)
 
-# 4. The old @app.get("/") route handler has been removed as it is no longer needed.
-# The StaticFiles mount now handles serving your index.html file.
+# 2. Add a route for the main landing page (index.html)
+@app.get("/", response_class=FileResponse, include_in_schema=False)
+async def read_landing_page():
+    return FileResponse(BASE_DIR / "public" / "index.html")
+
+# 3. Add a specific route for your login page (login.html)
+@app.get("/login", response_class=FileResponse, include_in_schema=False)
+async def read_login_page():
+    return FileResponse(BASE_DIR / "public" / "login.html")
+
+# --- Add more page routes here as needed ---
+# For example, if you have a pricing.html, you would add:
+# @app.get("/pricing", response_class=FileResponse, include_in_schema=False)
+# async def read_pricing_page():
+#     return FileResponse(BASE_DIR / "public" / "pricing.html")
