@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Haks - Stay Ahead of the Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    
+    <!-- CORRECTED PATHS -->
+    <link rel="stylesheet" href="/static/signup.css">
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="signup-wrapper">
+        <!-- Left Column - Branding -->
+        <div class="branding-column slide-in-left">
+            <!-- (Your branding content here) -->
+        </div>
+        
+        <!-- Right Column - Form -->
+        <div class="form-column slide-in-right">
+            <div class="signup-container">
+                <div class="form-header fade-in">
+                    <h1>Create Account</h1>
+                    <p>Start your journey with us today</p>
+                </div>
+                
+                <!-- (Your success message here) -->
+                
+                <form id="signupForm" class="fade-in">
+                    <!-- (Your form inputs here) -->
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="terms" name="terms" required>
+                        </div>
+                        <label for="terms">
+                            <!-- You might want to link this to a real /terms page later -->
+                            I agree to the <a href="/terms" target="_blank">Terms of Service</a> and 
+                            <a href="/privacy" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="signup-btn" id="signupBtn">
+                        <!-- (Button content here) -->
+                    </button>
+                </form>
+                
+                <div class="divider">
+                    <span>or continue with</span>
+                </div>
+                
+                <button class="google-btn" id="googleSignIn">
+                    <!-- (Google button content here) -->
+                </button>
+                
+                <div class="signin-link">
+                    <!-- CORRECTED PATH -->
+                    Already have an account? <a href="/login" id="signinLink">Sign in</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CORRECTED PATH -->
+    <script src="/static/signup.js"></script>
+
+    <!-- External scripts are fine as they are -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/ScrollSmoother.min.js"></script>
+</body>
+</html>
