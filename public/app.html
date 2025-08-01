@@ -4,324 +4,388 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HAKS - AI Assignment Solver</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* HAKS Design System */
-        :root {
-            /* HAKS Color Palette */
-            --primary-coral: #ff6b6b;
-            --primary-navy: #2c3e50;
-            --accent-blue: #3b82f6;
-            --accent-cyan: #06b6d4;
-            --background-cream: #faf8f5;
-            --surface-white: #ffffff;
-            --surface-elevated: #ffffff;
-            --text-dark: #2c3e50;
-            --text-medium: #64748b;
-            --text-light: #94a3b8;
-            --border-light: #e2e8f0;
-            --border-medium: #cbd5e1;
-            --shadow-color: rgba(44, 62, 80, 0.1);
-            --success-green: #10b981;
-            --error-red: #ef4444;
-            --warning-orange: #f59e0b;
-
-            /* Typography */
-            --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-            /* Spacing Scale */
-            --space-xs: 0.5rem;
-            --space-sm: 1rem;
-            --space-md: 1.5rem;
-            --space-lg: 2rem;
-            --space-xl: 3rem;
-            --space-2xl: 4rem;
-            --space-3xl: 6rem;
-
-            /* Shadows */
-            --shadow-sm: 0 1px 2px 0 var(--shadow-color);
-            --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
-            --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
-            --shadow-xl: 0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
-
-            /* Border Radius */
-            --radius-sm: 0.375rem;
-            --radius-md: 0.5rem;
-            --radius-lg: 0.75rem;
-            --radius-xl: 1rem;
-            --radius-2xl: 1.5rem;
-        }
-
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: var(--font-sans);
-            background-color: var(--background-cream);
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #2d1b69 0%, #11052c 70%);
+            background-attachment: fixed;
+            min-height: 100vh;
             overflow-x: hidden;
             position: relative;
-            min-height: 100vh;
+            color: white;
         }
 
-        /* Background Decoration - Flowing Lines like HAKS */
-        .background-decoration {
+        /* Particle Background */
+        .particles {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 0;
+            z-index: 1;
         }
 
-        .flowing-lines {
-            width: 100%;
-            height: 100%;
-            opacity: 0.3;
+        .particle {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: twinkle 4s ease-in-out infinite;
         }
 
-        /* Navigation Header */
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Geometric shapes */
+        .shape {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape-1 {
+            width: 120px;
+            height: 120px;
+            border: 2px solid rgba(255, 107, 157, 0.3);
+            border-radius: 50%;
+            top: 15%;
+            left: 8%;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 245, 255, 0.1);
+            border-radius: 0;
+            bottom: 20%;
+            right: 15%;
+            animation: rotate 12s linear infinite;
+        }
+
+        .shape-3 {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(0, 255, 136, 0.3);
+            border-radius: 50%;
+            top: 60%;
+            left: 5%;
+            animation: pulse 6s ease-in-out infinite;
+        }
+
+        .shape-4 {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 107, 157, 0.2);
+            border-radius: 50%;
+            top: 30%;
+            right: 20%;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        .shape-5 {
+            width: 100px;
+            height: 100px;
+            border: 2px solid rgba(0, 206, 201, 0.2);
+            border-radius: 0;
+            bottom: 40%;
+            left: 15%;
+            animation: rotate 15s linear infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.2); opacity: 0.6; }
+        }
+
+        /* Header */
         .nav-header {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(255, 255, 255, 0.9);
+            z-index: 100;
+            padding: 1.5rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-light);
-            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             transition: all 0.3s ease;
         }
 
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 var(--space-md);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 70px;
         }
 
         .nav-logo {
             display: flex;
             align-items: center;
-            gap: var(--space-xs);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #00f5ff;
+            text-decoration: none;
         }
 
-        .logo-icon {
-            font-size: 1.5rem;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--primary-navy);
-            letter-spacing: -0.025em;
+        .nav-logo::before {
+            content: "⚡";
+            margin-right: 0.5rem;
+            background: linear-gradient(45deg, #00f5ff, #00ff88);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .nav-back {
-            color: var(--text-medium);
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
             font-weight: 500;
-            transition: color 0.2s ease;
+            transition: color 0.3s ease;
             display: flex;
             align-items: center;
-            gap: var(--space-xs);
+            gap: 0.5rem;
         }
 
         .nav-back:hover {
-            color: var(--primary-coral);
+            color: #00f5ff;
         }
 
         /* Main Container */
         .container {
             max-width: 900px;
             margin: 0 auto;
-            padding: calc(70px + var(--space-xl)) var(--space-md) var(--space-xl);
+            padding: calc(70px + 3rem) 2rem 3rem;
             position: relative;
-            z-index: 1;
+            z-index: 10;
         }
 
         /* Page Header */
         .page-header {
             text-align: center;
-            margin-bottom: var(--space-3xl);
+            margin-bottom: 4rem;
         }
 
         .page-title {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-size: clamp(2.5rem, 8vw, 4rem);
             font-weight: 800;
-            color: var(--primary-navy);
-            margin-bottom: var(--space-md);
-            letter-spacing: -0.025em;
-        }
-
-        .page-title .accent {
-            color: var(--primary-coral);
-            background: linear-gradient(135deg, var(--primary-coral) 0%, #ffa726 100%);
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 20%, #6c5ce7 40%, #00cec9 60%, #00b894 80%, #fdcb6e 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            background-size: 200% 200%;
+            animation: gradientShift 8s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .page-description {
-            font-size: 1.25rem;
-            color: var(--text-medium);
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
             max-width: 600px;
             margin: 0 auto;
             line-height: 1.6;
         }
 
-        /* Form Containers */
+        /* Form Sections */
         .form-section {
-            background: var(--surface-white);
-            border-radius: var(--radius-2xl);
-            padding: var(--space-2xl);
-            margin-bottom: var(--space-xl);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-light);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
             transition: all 0.3s ease;
         }
 
+        .form-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        }
+
         .form-section:hover {
-            box-shadow: var(--shadow-xl);
+            transform: translateY(-2px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
         }
 
         .section-title {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            color: var(--primary-navy);
-            margin-bottom: var(--space-lg);
+            color: white;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            gap: var(--space-sm);
+            gap: 1rem;
         }
 
         .section-number {
-            width: 32px;
-            height: 32px;
-            background: linear-gradient(135deg, var(--primary-coral), #ffa726);
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b9d, #00cec9);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.875rem;
+            font-size: 1rem;
             font-weight: bold;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
         }
 
         /* Form Elements */
         .form-group {
-            margin-bottom: var(--space-lg);
+            margin-bottom: 2rem;
         }
 
         .form-label {
             display: block;
-            margin-bottom: var(--space-xs);
-            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+            color: rgba(255, 255, 255, 0.9);
             font-weight: 600;
-            font-size: 0.875rem;
-            letter-spacing: 0.025em;
+            font-size: 0.95rem;
         }
 
         .form-textarea {
             width: 100%;
             min-height: 120px;
-            padding: var(--space-md);
-            border: 2px solid var(--border-light);
-            border-radius: var(--radius-lg);
-            background-color: var(--surface-white);
-            color: var(--text-dark);
+            padding: 1.25rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
             font-family: inherit;
             font-size: 1rem;
             line-height: 1.5;
             resize: vertical;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .form-textarea:focus {
             outline: none;
-            border-color: var(--primary-coral);
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            border-color: #00cec9;
+            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.15);
+            background: rgba(255, 255, 255, 0.12);
         }
 
         .form-textarea::placeholder {
-            color: var(--text-light);
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .form-file {
             width: 100%;
-            padding: var(--space-md);
-            border: 2px dashed var(--border-medium);
-            border-radius: var(--radius-lg);
-            background-color: var(--background-cream);
-            color: var(--text-dark);
+            padding: 1.25rem;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
             font-family: inherit;
             font-size: 1rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .form-file:hover {
-            border-color: var(--primary-coral);
-            background-color: rgba(255, 107, 107, 0.05);
+            border-color: #00cec9;
+            background: rgba(0, 206, 201, 0.1);
         }
 
         .form-file:focus {
             outline: none;
-            border-color: var(--primary-coral);
-            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+            border-color: #00cec9;
+            box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.15);
         }
 
         .form-file::file-selector-button {
-            background: var(--primary-coral);
+            background: linear-gradient(135deg, #ff6b9d, #00cec9);
             color: white;
             border: none;
-            padding: var(--space-xs) var(--space-md);
-            border-radius: var(--radius-md);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
             cursor: pointer;
-            margin-right: var(--space-md);
-            font-weight: 500;
-            transition: all 0.2s ease;
+            margin-right: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
 
         .form-file::file-selector-button:hover {
-            background: #ff5252;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
         }
 
         /* Buttons */
         .btn-primary {
-            background: var(--primary-coral);
+            background: linear-gradient(135deg, #ff6b9d, #00cec9);
             color: white;
             border: none;
-            padding: var(--space-md) var(--space-xl);
-            border-radius: var(--radius-lg);
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
             width: 100%;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--space-xs);
+            gap: 0.75rem;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover:not(:disabled)::before {
+            left: 100%;
         }
 
         .btn-primary:hover:not(:disabled) {
-            background: #ff5252;
             transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 8px 25px rgba(255, 107, 157, 0.4);
         }
 
         .btn-primary:disabled {
@@ -330,27 +394,36 @@
             transform: none;
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        /* Results Container */
+        /* Results Grid */
         .results-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--space-xl);
-            margin-top: var(--space-xl);
+            gap: 2rem;
+            margin-top: 2rem;
         }
 
         .result-card {
-            background: var(--surface-white);
-            border-radius: var(--radius-xl);
-            padding: var(--space-xl);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid var(--border-light);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             transition: all 0.3s ease;
             opacity: 0;
             transform: translateY(20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
         }
 
         .result-card.visible {
@@ -360,63 +433,61 @@
 
         .result-card:hover {
             transform: translateY(-4px);
-            box-shadow: var(--shadow-xl);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
         }
 
         .result-title {
-            font-size: 1.125rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            color: var(--primary-navy);
-            margin-bottom: var(--space-md);
+            color: white;
+            margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
-            gap: var(--space-xs);
+            gap: 0.75rem;
         }
 
         .result-content {
-            color: var(--text-medium);
+            color: rgba(255, 255, 255, 0.8);
             line-height: 1.7;
             white-space: pre-wrap;
             word-wrap: break-word;
-            font-size: 0.9375rem;
+            font-size: 0.95rem;
         }
 
         /* Status Messages */
         .status-message {
             text-align: center;
-            padding: var(--space-lg);
-            margin: var(--space-lg) 0;
-            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 12px;
             display: none;
             font-weight: 500;
+            backdrop-filter: blur(20px);
         }
 
         .status-loading {
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
-            color: white;
+            background: rgba(0, 206, 201, 0.1);
+            border: 1px solid rgba(0, 206, 201, 0.3);
+            color: #00cec9;
             animation: pulse 2s infinite;
         }
 
         .status-error {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--error-red);
-            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(255, 107, 157, 0.1);
+            border: 1px solid rgba(255, 107, 157, 0.3);
+            color: #ff6b9d;
         }
 
         .status-success {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success-green);
-            border: 1px solid rgba(16, 185, 129, 0.2);
+            background: rgba(0, 184, 148, 0.1);
+            border: 1px solid rgba(0, 184, 148, 0.3);
+            color: #00b894;
         }
 
         /* Animations */
         @keyframes pulse {
-            0%, 100% {
-                opacity: 1;
-            }
-            50% {
-                opacity: 0.7;
-            }
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         @keyframes slideInUp {
@@ -434,45 +505,7 @@
             animation: slideInUp 0.6s ease forwards;
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: calc(70px + var(--space-lg)) var(--space-sm) var(--space-lg);
-            }
-
-            .form-section {
-                padding: var(--space-lg);
-            }
-
-            .results-grid {
-                grid-template-columns: 1fr;
-                gap: var(--space-lg);
-            }
-
-            .nav-container {
-                padding: 0 var(--space-sm);
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-
-            .page-description {
-                font-size: 1.125rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .form-section {
-                padding: var(--space-md);
-            }
-
-            .section-title {
-                font-size: 1.25rem;
-            }
-        }
-
-        /* Button Ripple Effect */
+        /* Ripple Effect */
         .ripple {
             position: absolute;
             border-radius: 50%;
@@ -488,60 +521,91 @@
                 opacity: 0;
             }
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: calc(70px + 2rem) 1rem 2rem;
+            }
+            
+            .form-section {
+                padding: 2rem;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .page-title {
+                font-size: 2.5rem;
+            }
+            
+            .shape-1, .shape-2, .shape-3, .shape-4, .shape-5 {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-section {
+                padding: 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Entrance animations */
+        .fade-in-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
 </head>
 <body>
-    <!-- Background Decoration -->
-    <div class="background-decoration">
-        <svg class="flowing-lines" viewBox="0 0 1200 800" fill="none">
-            <path d="M0 400C300 200 600 600 1200 400" stroke="url(#gradient1)" stroke-width="2" opacity="0.6"/>
-            <path d="M0 300C400 100 800 500 1200 300" stroke="url(#gradient2)" stroke-width="2" opacity="0.4"/>
-            <path d="M0 500C350 300 650 700 1200 500" stroke="url(#gradient3)" stroke-width="2" opacity="0.3"/>
-            <defs>
-                <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#3b82f6"/>
-                    <stop offset="100%" style="stop-color:#06b6d4"/>
-                </linearGradient>
-                <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#ff6b6b"/>
-                    <stop offset="100%" style="stop-color:#ffa726"/>
-                </linearGradient>
-                <linearGradient id="gradient3" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:#8b5cf6"/>
-                    <stop offset="100%" style="stop-color:#ec4899"/>
-                </linearGradient>
-            </defs>
-        </svg>
-    </div>
+    <!-- Particle Background -->
+    <div class="particles"></div>
+
+    <!-- Geometric Shapes -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+    <div class="shape shape-5"></div>
 
     <!-- Navigation Header -->
     <nav class="nav-header">
         <div class="nav-container">
-            <div class="nav-logo">
-                <div class="logo-icon">🧠</div>
-                <span class="logo-text">Haks</span>
-            </div>
-            <a href="/public/index.html" style="text-decoration: none;">
-            <a href="#" class="nav-back">
+            <div class="nav-logo">Haks</div>
+            <a href="/public/index.html" class="nav-back">
                 <span>←</span>
                 <span>Back to Home</span>
-            </a></a>
+            </a>
         </div>
     </nav>
 
     <div class="container">
         <!-- Page Header -->
-        <div class="page-header">
-            <h1 class="page-title">
-                Assignment <span class="accent">Solver</span>
-            </h1>
+        <div class="page-header fade-in-up">
+            <h1 class="page-title">Assignment Solver</h1>
             <p class="page-description">
                 Leverage AI to get accurate solutions for your assignments, then paraphrase them into a natural, student-like voice.
             </p>
         </div>
 
         <!-- Step 1: Get Solution -->
-        <div class="form-section">
+        <div class="form-section fade-in-up">
             <form id="solver-form">
                 <h2 class="section-title">
                     <span class="section-number">1</span>
@@ -551,7 +615,7 @@
                 <div class="form-group">
                     <label for="assignment-text" class="form-label">Paste assignment text:</label>
                     <textarea 
-                        id="assignment-text" 
+                        id="assignment-text"
                         class="form-textarea"
                         placeholder="e.g., Explain the theory of relativity in simple terms."
                     ></textarea>
@@ -560,8 +624,8 @@
                 <div class="form-group">
                     <label for="assignment-file" class="form-label">Or upload a file (PDF, DOCX, PNG, JPG):</label>
                     <input 
-                        type="file" 
-                        id="assignment-file" 
+                        type="file"
+                        id="assignment-file"
                         class="form-file"
                         accept=".pdf,.docx,.png,.jpg,.jpeg"
                     >
@@ -600,7 +664,7 @@
         </div>
 
         <!-- Step 2: Generate PDF -->
-        <div class="form-section" style="margin-top: 2.5rem;">
+        <div class="form-section fade-in-up" style="margin-top: 2.5rem;">
             <form id="pdf-form">
                 <h2 class="section-title">
                     <span class="section-number">2</span>
@@ -610,7 +674,7 @@
                 <div class="form-group">
                     <label for="pdf-text" class="form-label">Paste text to convert:</label>
                     <textarea 
-                        id="pdf-text" 
+                        id="pdf-text"
                         class="form-textarea"
                         placeholder="Paste your paraphrased answer here to make it look handwritten..."
                     ></textarea>
@@ -645,6 +709,22 @@
         const originalAnswerDiv = document.getElementById('original-answer');
         const paraphrasedAnswerDiv = document.getElementById('paraphrased-answer');
 
+        // Generate particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 100;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 4 + 's';
+                particle.style.animationDuration = (Math.random() * 2 + 3) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
         // Button Ripple Effect
         function createRipple(event) {
             const button = event.currentTarget;
@@ -653,14 +733,14 @@
             const size = Math.max(rect.width, rect.height);
             const x = event.clientX - rect.left - size / 2;
             const y = event.clientY - rect.top - size / 2;
-
+            
             ripple.style.width = ripple.style.height = size + 'px';
             ripple.style.left = x + 'px';
             ripple.style.top = y + 'px';
             ripple.classList.add('ripple');
-
+            
             button.appendChild(ripple);
-
+            
             setTimeout(() => {
                 ripple.remove();
             }, 600);
@@ -675,10 +755,10 @@
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('.nav-header');
             if (window.scrollY > 50) {
-                nav.style.background = 'rgba(255, 255, 255, 0.95)';
-                nav.style.boxShadow = '0 4px 6px -1px rgba(44, 62, 80, 0.1)';
+                nav.style.background = 'rgba(255, 255, 255, 0.08)';
+                nav.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
             } else {
-                nav.style.background = 'rgba(255, 255, 255, 0.9)';
+                nav.style.background = 'rgba(255, 255, 255, 0.05)';
                 nav.style.boxShadow = 'none';
             }
         });
@@ -710,7 +790,7 @@
             setTimeout(() => {
                 paraphrasedAnswerBox.classList.add('visible');
             }, 200);
-
+            
             // Auto-fill PDF textarea
             pdfText.value = paraphrasedAnswer;
         }
@@ -728,42 +808,42 @@
             hideResults();
             solveButton.disabled = true;
             solveButton.innerHTML = '<span>⏳</span><span>Solving...</span>';
-
+            
             const formData = new FormData();
             const textValue = assignmentText.value.trim();
             const fileValue = assignmentFile.files[0];
-
+            
             // Validation
             if (textValue && fileValue) {
                 showStatus('error', 'Please provide either text or a file, not both.');
                 resetSolveButton();
                 return;
             }
-
+            
             if (!textValue && !fileValue) {
                 showStatus('error', 'Please enter text or upload a file.');
                 resetSolveButton();
                 return;
             }
-
+            
             // Prepare form data
             if (textValue) {
                 formData.append('text', textValue);
             } else if (fileValue) {
                 formData.append('file', fileValue);
             }
-
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/solve-assignment`, {
                     method: 'POST',
                     body: formData,
                 });
-
+                
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
                 }
-
+                
                 const data = await response.json();
                 hideAllStatus();
                 showResults(data.original_answer, data.paraphrased_answer);
@@ -784,23 +864,23 @@
                 showStatus('error', 'Please enter text to generate a PDF.');
                 return;
             }
-
+            
             pdfButton.disabled = true;
             pdfButton.innerHTML = '<span>⏳</span><span>Generating...</span>';
             hideAllStatus();
-
+            
             try {
                 const response = await fetch(`${API_BASE_URL}/generate-handwritten-pdf`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: textToConvert }),
                 });
-
+                
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.detail || `HTTP error! Status: ${response.status}`);
                 }
-
+                
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -811,7 +891,7 @@
                 a.click();
                 window.URL.revokeObjectURL(url);
                 a.remove();
-
+                
                 showStatus('success', '📄 PDF generated and downloaded successfully!');
                 
             } catch (err) {
@@ -849,24 +929,21 @@
             }
         };
 
-        // Smooth scroll for navigation
-        document.querySelector('.nav-back').addEventListener('click', (e) => {
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        // Add entrance animations on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            const sections = document.querySelectorAll('.form-section');
-            sections.forEach((section, index) => {
-                section.style.opacity = '0';
-                section.style.transform = 'translateY(30px)';
-                
-                setTimeout(() => {
-                    section.style.transition = 'all 0.6s ease';
-                    section.style.opacity = '1';
-                    section.style.transform = 'translateY(0)';
-                }, index * 200);
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // Entrance animations
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.fade-in-up').forEach(el => {
+                observer.observe(el);
             });
         });
     </script>
